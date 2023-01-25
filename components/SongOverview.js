@@ -1,6 +1,7 @@
 import React from "react"
 import SongForm from "./SongForm"
 import SongList from "./SongList"
+import SongFilter from "./SongFilter"
 
 class SongOverview extends React.Component {
     constructor() {
@@ -8,17 +9,23 @@ class SongOverview extends React.Component {
         this.state = {
             songs: [
                 {
-                    title: "Test_title1",
-                    artist: "Test_atist1",
+                    title: "B_Test_title",
+                    artist: "B_Test_artist",
                     genre: "Test_genre1",
-                    rating: "Test_rating1",
+                    rating: "1",
                 },
                 {
-                    title: "Test_title2",
-                    artist: "Test_atist2",
+                    title: "A_Test_title",
+                    artist: "A_Test_artist",
                     genre: "Test_genre2",
-                    rating: "Test_rating2",
+                    rating: "3",
                 },
+                {
+                    title: "C_Test_title",
+                    artist: "C_Test_artist",
+                    genre: "Test_genre3",
+                    rating: "3",
+                }
             ]
         }
     }
@@ -28,20 +35,65 @@ class SongOverview extends React.Component {
         this.setState((prevState) => {
             const newSong = prevState.songs.concat(song)
             return {
-                songs: newSong,
+                songs: newSong
             }
         })
     }
 
     removeSong = (id) => {
         this.setState((prevState) => {
-          const songs = prevState.songs;
-          const newList = songs.filter((song, index) => index !== id);
-          return {
-            songs: newList,
-          };
-        });
-      };
+            const songs = prevState.songs
+            const newList = songs.filter((song, index) => index !== id)
+            return {
+                songs: newList
+            }
+        })
+    }
+
+    filterArtist = (event) => {
+        this.setState((prevState) => {
+            const songs = prevState.artist
+            const artist = event.target.value
+            // const filteredList = songs.sort((song) => song.artist === artist);
+            const filteredList = (a, b) => {
+                const artistA = a.artist.toUpperCase();
+                const artistB = b.artist.toUpperCase();
+            
+                let comparison = 0;
+                if (artistA > artistB) {
+                  comparison = 1;
+                } else if (artistA < artistB) {
+                  comparison = -1;
+                }
+                return comparison;
+            }
+            return {
+                songs: filteredList
+            }
+        })
+    }
+
+    filterRating = (event) => {
+        this.setState((prevState) => {
+            const songs = prevState.songs;
+            const rating = event.target.value;
+            const filteredList = (a, b) => {
+                const artistA = a.artist.toUpperCase();
+                const artistB = b.artist.toUpperCase();
+            
+                let comparison = 0;
+                if (artistA > artistB) {
+                  comparison = 1;
+                } else if (artistA < artistB) {
+                  comparison = -1;
+                }
+                return comparison;
+            }
+            return {
+                songs: filteredList
+            }
+        })
+    }
 
     render() {
         return (
@@ -49,17 +101,22 @@ class SongOverview extends React.Component {
                 <SongForm onSubmit={this.addSong} />
                 <table className="song-table">
                     <tr className="song-header">
-                        <th className="song-column">Song</th>
-                        <th className="artist-column">Artist</th>
-                        <th className="genre-column">Genre</th>
-                        <th className="rating-column">Rating</th>
-                        <th className="del-column">Remove</th>
+                        <th className="song-row__song">Song</th>
+                        <th className="song-row__artist">Artist</th>
+                        <th className="song-row__genre">Genre</th>
+                        <th className="song-row__rating">Rating</th>
+                        <th className="song-row__remove">Remove</th>
                     </tr>
-                <SongList
-                    className="song-list"
-                    songs={this.state.songs}
-                    handleClick={this.removeSong}
-                />
+                    <SongList
+                        className="song-list"
+                        songs={this.state.songs}
+                        handleClick={this.removeSong}
+                    />
+                    <SongFilter
+                        songs={this.state.songs}
+                        // onFilterArtist={this.filterArtist}
+                        onFilterRating={this.filterRating}
+                    />
                 </table>
             </div>
         )
