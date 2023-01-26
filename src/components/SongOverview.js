@@ -1,7 +1,8 @@
 import React from "react"
+import SongFilter from "./SongFilter"
 import SongForm from "./SongForm"
 import SongList from "./SongList"
-import SongFilter from "./SongFilter"
+import SongSort from "./SongSort"
 
 class SongOverview extends React.Component {
     constructor() {
@@ -9,22 +10,34 @@ class SongOverview extends React.Component {
         this.state = {
             songs: [
                 {
-                    title: "B_Test_title",
-                    artist: "B_Test_artist",
-                    genre: "Test_genre1",
-                    rating: "1",
+                    title: "A_Test_title",
+                    artist: "Bon Jovi",
+                    genre: "Rock",
+                    rating: "2",
                 },
                 {
-                    title: "A_Test_title",
-                    artist: "A_Test_artist",
-                    genre: "Test_genre2",
+                    title: "D_Test_title",
+                    artist: "Abba",
+                    genre: "Pop",
                     rating: "3",
                 },
                 {
                     title: "C_Test_title",
-                    artist: "C_Test_artist",
-                    genre: "Test_genre3",
-                    rating: "3",
+                    artist: "Queen",
+                    genre: "Rock",
+                    rating: "1",
+                },
+                {
+                    title: "A_Test_title",
+                    artist: "U2",
+                    genre: "Rock",
+                    rating: "4",
+                },
+                {
+                    title: "E_Test_title",
+                    artist: "Dave Bruback",
+                    genre: "Jazz",
+                    rating: "4",
                 }
             ]
         }
@@ -50,25 +63,47 @@ class SongOverview extends React.Component {
         })
     }
 
-    filterArtist = (event) => {
+    sortRating = (event) => {
         this.setState((prevState) => {
-            const songs = prevState.artist
-            const artist = event.target.value
-            // const filteredList = songs.sort((song) => song.artist === artist);
-            const filteredList = (a, b) => {
-                const artistA = a.artist.toUpperCase();
-                const artistB = b.artist.toUpperCase();
-            
-                let comparison = 0;
-                if (artistA > artistB) {
-                  comparison = 1;
-                } else if (artistA < artistB) {
-                  comparison = -1;
-                }
-                return comparison;
-            }
+            const songs = prevState.songs
+            const rating = event.target.value
+            const sortedList = songs.sort(function sortStars(a, b) {
+                if (a.rating > b.rating) return 1
+                else if (b.rating > a.rating) return -1
+                return 0
+            })
             return {
-                songs: filteredList
+                songs: sortedList
+            }
+        })
+    }
+
+    sortArtist = (event) => {
+        this.setState((prevState) => {
+            const songs = prevState.songs
+            const artist = event.target.value
+            const sortedList = songs.sort(function fromAtoZ(a, b) {
+                if (a.artist.toUpperCase() > b.artist.toUpperCase()) return 1
+                else if (a.artist.toUpperCase() < b.artist.toUpperCase()) return -1
+                return 0;
+            })
+            return {
+                songs: sortedList,
+            }
+        })
+    }
+
+    sortTitle = (event) => {
+        this.setState((prevState) => {
+            const songs = prevState.songs
+            const title = event.target.value
+            const sortedList = songs.sort(function fromAtoZ(a, b) {
+                if (a.title.toUpperCase() > b.title.toUpperCase()) return 1
+                else if (a.title.toUpperCase() < b.title.toUpperCase()) return -1
+                return 0;
+            })
+            return {
+                songs: sortedList
             }
         })
     }
@@ -77,27 +112,27 @@ class SongOverview extends React.Component {
         this.setState((prevState) => {
             const songs = prevState.songs;
             const rating = event.target.value;
-            const filteredList = (a, b) => {
-                const artistA = a.artist.toUpperCase();
-                const artistB = b.artist.toUpperCase();
-            
-                let comparison = 0;
-                if (artistA > artistB) {
-                  comparison = 1;
-                } else if (artistA < artistB) {
-                  comparison = -1;
-                }
-                return comparison;
-            }
+            const filteredList = songs.filter((song) => song.rating === rating);
             return {
-                songs: filteredList
-            }
-        })
-    }
+                songs: filteredList,
+            };
+        });
+    };
+
+    filterGenre = (event) => {
+        this.setState((prevState) => {
+            const songs = prevState.songs;
+            const genre = event.target.value;
+            const filteredList = songs.filter((song) => song.genre === genre);
+            return {
+                songs: filteredList,
+            };
+        });
+    };
 
     render() {
         return (
-            <div className="song-overview">
+            <div>
                 <SongForm onSubmit={this.addSong} />
                 <table className="song-table">
                     <tr className="song-header">
@@ -112,12 +147,18 @@ class SongOverview extends React.Component {
                         songs={this.state.songs}
                         handleClick={this.removeSong}
                     />
-                    <SongFilter
-                        songs={this.state.songs}
-                        // onFilterArtist={this.filterArtist}
-                        onFilterRating={this.filterRating}
-                    />
                 </table>
+                <SongSort
+                    songs={this.state.songs}
+                    onSortArtist={this.sortArtist}
+                    onSortRating={this.sortRating}
+                    onSortTitle={this.sortTitle}
+                />
+                <SongFilter
+                    songs={this.state.songs}
+                    onFilterGenre={this.filterGenre}
+                    onFilterRating={this.filterRating}
+                />
             </div>
         )
     }

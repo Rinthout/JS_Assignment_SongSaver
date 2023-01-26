@@ -7,10 +7,10 @@ function Song(props) {
             <td>{props.artist}</td>
             <td>{props.genre}</td>
             <td>{props.rating}</td>
-            <td className="del-button" 
+            <td className="del-button"
                 onClick={() => props.handleClick(props.id)}
             >
-              X
+                X
             </td>
         </tr>
     )

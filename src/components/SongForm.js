@@ -84,7 +84,7 @@ class SongForm extends React.Component {
                         <option value="5">5</option>
                     </select>
 
-                    <button className="add-button" type="submit" value="Add Song">Add<br />Song</button>
+                    <button className="add-button" type="submit" value="AddSong">Add<br />Song</button>
                 </form>
             </div>
         )
